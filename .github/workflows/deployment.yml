@@ -3,7 +3,8 @@ name: Despliegue
 on:
    push:
      branches:
-       - main
+       - dev
+       - master
 
 env:
    AWS_REGION: 'us-east-1'
@@ -21,10 +22,58 @@ jobs:
            uses: hashicorp/setup-terraform@v3
            with:
             terraform_version: "1.9.6"
+         
+         - name: set_environment
+           run: |
+             if [[ "${{ github.ref }}" == "refs/head/master" ]]
+             then
+               echo "Entorno productivo"
+               export environment="prod"
+             else
+               echo "Entorno desarrollo"
+               export environment="dev"
+             fi
 
-         - name: terraform_plan
+             - name: set_environment
+             run: |
+               if [[ "${{ github.ref }}" == "refs/head/master" ]]
+               then
+                 echo "Entorno productivo"
+                 export environment="prod"
+               else
+                 echo "Entorno desarrollo"
+                 export environment="dev"
+               fi
+      
+         - name: terraform_init
            run: |
              terraform init
-             terraform plan
-             terraform apply -auto-approve
-         
+    
+         - name: select_workspace
+           run: |
+             if [[ "${{ github.ref }}" == "refs/head/master" ]]
+             then
+               terraform workspace select  -or-create prod
+             else
+               terraform workspace select  -or-create dev
+             fi
+    
+         - name: terraform_plan
+           run: |
+             if [[ "${{ github.ref }}" == "refs/head/master" ]]
+             then
+               terraform plan -var-file prod.tfvars
+             else
+               terraform plan -var-file dev.tfvars
+             fi
+               
+         - name: terraform_apply
+           run: |
+             if [[ "${{ github.ref }}" == "refs/head/master" ]]
+             then
+               terraform apply -var-file prod.tfvars -auto-approve
+             else
+               terraform apply -var-file dev.tfvars -auto-approve
+             fi
+      
+          
