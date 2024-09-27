@@ -1,7 +1,7 @@
 name: Despliegue
 
 on:
-   push:
+  push:
       branches:
          - dev
          - master
@@ -17,17 +17,13 @@ jobs:
       steps:
          - name: clone_repo
            uses: actions/checkout@v3
-   instalar_terraform:
-      runs-on: ubuntu-latest
-      steps:
+
          - name: install_terraform
            uses: hashicorp/setup-terraform@v3
            with:
             terraform_version: "1.9.6"
-   terraform_plan:
-      runs-on: ubuntu-latest
-      steps:
+
          - name: terraform_plan
            run: |
-           terraform init
-           terraform plan
+             terraform init
+             terraform plan
