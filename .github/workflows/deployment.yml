@@ -27,7 +27,7 @@ jobs:
    terraform_plan:
       runs-on: ubuntu-latest
       steps:
-         - name: terraform-plan
+         - name: terraform_plan
            run: |
            terraform init
            terraform plan
