@@ -2,9 +2,9 @@ name: Despliegue
 
 on:
    push:
-      branches:
-         - dev
-         - master
+     branches:
+       - dev
+       - master
 
 env:
    AWS_REGION: 'us-east-1'
@@ -27,3 +27,4 @@ jobs:
            run: |
              terraform init
              terraform plan
+         
