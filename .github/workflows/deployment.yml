@@ -1,7 +1,7 @@
 name: Despliegue
 
 on:
-  push:
+   push:
       branches:
          - dev
          - master
